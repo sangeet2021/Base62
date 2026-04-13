@@ -6,12 +6,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/sangeet/base62/internal/db"
 )
 
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal(".env file not found!")
 	}
+
+	db.Connect()
 
 	r := gin.Default()
 
