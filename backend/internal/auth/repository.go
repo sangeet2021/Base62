@@ -14,7 +14,7 @@ type User struct {
 }
 
 func createUser (email string, password string) error {
-	query := `INSERT INTO users (email, password) VALUES ($1 $2)`
+	query := `INSERT INTO users (email, password) VALUES ($1, $2)`
 	_, err := db.Pool.Exec(context.Background(), query, email, password)
 	return err
 }
