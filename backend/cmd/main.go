@@ -12,6 +12,7 @@ import (
 
 func registerRoutes(r *gin.Engine){
 	r.POST("/login", auth.LoginHandler)
+	r.POST("/register", auth.RegisterHandler)
 }
 
 func main() {
