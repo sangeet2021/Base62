@@ -55,20 +55,17 @@ func RegisterHandler(c *gin.Context) {
 	}
 
 	_, err := getUserByEmail(req.Email)
-	if err != nil {
+	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
 		return
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
-		return
-	}
 
-	err = createUser(req.Email, req.Username, string(hashedPassword))
+	err = createUser(req.Email, req.Username, req.Password)
 	if err != nil {
+		log.Printf("ERROR: Database registration failed: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register user"})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "User registerd succesfully"})

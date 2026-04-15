@@ -32,7 +32,7 @@ func getUserByEmail(email string) (*User, error) {
 
 	var user User
 	err := row.Scan(&user.ID, &user.Email, &user.Password, &user.CreatedAt)
-	if err == nil {
+	if err != nil {
 		log.Printf("Scan error: %v", err)
 		return nil, err
 	}
