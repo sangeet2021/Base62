@@ -41,9 +41,15 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
+	token, err := GenerateToken(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error" : "Could not generate a token"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login Succesful",
-		"userID":  user.ID,
+		"token":  token,
 	})
 }
 
@@ -59,7 +65,6 @@ func RegisterHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
 		return
 	}
-
 
 	err = createUser(req.Email, req.Username, req.Password)
 	if err != nil {
