@@ -43,13 +43,13 @@ func LoginHandler(c *gin.Context) {
 
 	token, err := GenerateToken(user.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error" : "Could not generate a token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate a token"})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login Succesful",
-		"token":  token,
+		"token":   token,
 	})
 }
 
@@ -66,6 +66,12 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
+	_, err = getUserByUsername(req.Username)
+	if err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Username already exists"})
+		return
+	}
+
 	err = createUser(req.Email, req.Username, req.Password)
 	if err != nil {
 		log.Printf("ERROR: Database registration failed: %v", err)
@@ -74,4 +80,25 @@ func RegisterHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "User registerd succesfully"})
+}
+
+func GetProfileHandler(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found"})
+		return
+	}
+
+	user, err := getUserById(userID.(int))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch the user"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"id":        user.ID,
+		"username":  user.Username,
+		"email":     user.Email,
+		"createdAt": user.CreatedAt,
+	})
 }

@@ -13,6 +13,12 @@ import (
 func registerRoutes(r *gin.Engine){
 	r.POST("/login", auth.LoginHandler)
 	r.POST("/register", auth.RegisterHandler)
+
+	api := r.Group("/api")
+	api.Use(auth.AuthMiddleware())
+	{
+		api.GET("/me", auth.GetProfileHandler)
+	}
 }
 
 func main() {
