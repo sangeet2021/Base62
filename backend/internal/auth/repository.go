@@ -42,7 +42,7 @@ func getUserByEmail(email string) (*User, error) {
 }
 
 func getUserByUsername(username string) (*User, error) {
-	query := `SELECT id, username, email, password, create_at FROM users WHERE username = $1`
+	query := `SELECT id, username, email, password, created_at FROM users WHERE username = $1`
 	row := db.Pool.QueryRow(context.Background(), query, username)
 
 	var user User
