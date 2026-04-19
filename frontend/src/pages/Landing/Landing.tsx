@@ -14,7 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import './Landing.css';
-import Button from '@/components/ui/button';
+import Button from '@/components/ui/Button';
 
 const Landing: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
