@@ -1,0 +1,9 @@
+.outline {
+  -webkit-text-stroke: 1px rgba(240, 240, 240, 0.3);
+  color: transparent;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+}
