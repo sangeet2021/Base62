@@ -65,7 +65,7 @@ const Landing: React.FC = () => {
           <NavLink to="" className={navLinkStyles}>
             Docs
           </NavLink>
-          <NavLink to = '/login'>
+          <NavLink to="/login">
             <Button variant="primary">
               Get Started <ArrowRight size={14} />
             </Button>
@@ -102,9 +102,11 @@ const Landing: React.FC = () => {
           one razor-sharp platform built for developers.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mt-4 md:mt-6 w-full sm:w-auto justify-center">
-          <Button variant="primary">
-            Start for free <ArrowRight size={14} />
-          </Button>
+          <NavLink to="/register">
+            <Button variant="primary">
+              Start for free <ArrowRight size={14} />
+            </Button>
+          </NavLink>
           <Button variant="ghost">View the docs</Button>
         </div>
       </section>
