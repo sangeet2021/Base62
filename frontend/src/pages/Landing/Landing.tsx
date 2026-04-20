@@ -50,8 +50,8 @@ const Landing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col gap-8 px-4 md:px-6 lg:px-12 pt-4 md:pt-8 lg:pt-12">
-      <nav className="flex bg-transparent justify-between items-center">
-        <h1 className="font-display font-extrabold text-2xl md:text-3xl sticky z-50">
+      <nav className="flex bg-transparent justify-between items-center z-50">
+        <h1 className="font-display font-extrabold text-2xl md:text-3xl sticky ">
           base<span className="text-accent">62</span>
         </h1>
 

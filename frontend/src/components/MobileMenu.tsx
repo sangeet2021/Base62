@@ -24,7 +24,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
       ref={overlayRef}
       onClick={onClose}
       className={[
-        'md:hidden fixed inset-0 top-0 z-40 bg-black/60 backdrop-blur-sm',
+        'md:hidden fixed inset-0 top-0 z-75 bg-black/60 backdrop-blur-sm ',
         'transition-opacity duration-300',
         open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
       ].join(' ')}
