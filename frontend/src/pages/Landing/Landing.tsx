@@ -103,7 +103,7 @@ const Landing: React.FC = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mt-4 md:mt-6 w-full sm:w-auto justify-center">
           <NavLink to="/register">
-            <Button variant="primary">
+            <Button variant="primary" className="w-full">
               Start for free <ArrowRight size={14} />
             </Button>
           </NavLink>
