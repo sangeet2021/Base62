@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap');
 @import 'tailwindcss';
 
-
-
 @theme {
   --color-bg: #080808;
   --color-surface: #111111;
@@ -14,6 +12,19 @@
 
   --font-display: 'Syne', sans-serif;
   --font-mono: 'DM Mono', monospace;
+
+  --animate-float: float 8s ease-in-out infinite;
+  --animate-float-reverse: float 10s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(30px);
+  }
 }
 
 * {

@@ -65,9 +65,11 @@ const Landing: React.FC = () => {
           <NavLink to="" className={navLinkStyles}>
             Docs
           </NavLink>
-          <Button variant="primary">
-            Get Started <ArrowRight size={14} />
-          </Button>
+          <NavLink to = '/login'>
+            <Button variant="primary">
+              Get Started <ArrowRight size={14} />
+            </Button>
+          </NavLink>
         </div>
 
         <button
