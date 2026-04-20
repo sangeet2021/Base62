@@ -1,9 +1,7 @@
-import { useRef, useEffect} from "react";
-import type  {ButtonHTMLAttributes, ReactNode} from "react"
-import gsap from "gsap";
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-type ButtonVariant = "primary" | "ghost" | "outline" | "danger" | "accent" | "muted";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonVariant = 'primary' | 'ghost' | 'outline' | 'danger' | 'accent' | 'muted';
+type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -16,107 +14,50 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-accent text-bg font-bold",
-  ghost: "bg-transparent text-muted border border-border-custom",
-  outline: "bg-transparent text-text border border-text",
-  danger: "bg-red-600 text-white font-bold",
-  accent: "bg-accent-orange text-bg font-bold",
-  muted: "bg-surface text-muted border border-border-custom",
+  primary:  'bg-accent text-bg font-bold hover:bg-white active:scale-97',
+  ghost:    'bg-transparent text-muted border border-border-custom hover:text-[#f0f0f0] hover:border-[#666] active:scale-97',
+  outline:  'bg-transparent text-text border border-text hover:bg-[#f0f0f0] hover:text-[#080808] active:scale-97',
+  danger:   'bg-red-600 text-white font-bold hover:bg-red-500 active:scale-97',
+  accent:   'bg-accent-orange text-bg font-bold hover:bg-[#ff8c5a] active:scale-97',
+  muted:    'bg-surface text-muted border border-border-custom hover:text-[#f0f0f0] active:scale-97',
 };
 
 const sizes: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-xs",
-  md: "px-5 py-2.5 text-sm",
-  lg: "px-8 py-4 text-base",
-};
-
-const hoverColors: Record<ButtonVariant, { bg?: string; color?: string; borderColor?: string }> = {
-  primary: { bg: "#ffffff" },
-  ghost: { color: "#f0f0f0", borderColor: "#666666" },
-  outline: { bg: "#f0f0f0", color: "#080808" },
-  danger: { bg: "#ef4444" },
-  accent: { bg: "#ff8c5a" },
-  muted: { color: "#f0f0f0" },
+  sm: 'px-3 py-1.5 text-xs',
+  md: 'px-5 py-2.5 text-sm',
+  lg: 'px-8 py-4 text-base',
 };
 
 export default function Button({
-  variant = "primary",
-  size = "md",
+  variant = 'primary',
+  size = 'md',
   loading = false,
   fullWidth = false,
   leftIcon,
   rightIcon,
   children,
   disabled,
-  className = "",
+  className = '',
   ...props
 }: ButtonProps) {
-  const btnRef = useRef<HTMLButtonElement>(null);
   const isDisabled = disabled || loading;
-
-  useEffect(() => {
-    const el = btnRef.current;
-    if (!el || isDisabled) return;
-
-    const hover = hoverColors[variant];
-
-    const onEnter = () => {
-      gsap.to(el, {
-        ...hover,
-        scale: 1.03,
-        duration: 0.2,
-        ease: "power2.out",
-      });
-    };
-
-    const onLeave = () => {
-      gsap.to(el, {
-        bg: "",
-        scale: 1,
-        color: "",
-        borderColor: "",
-        duration: 0.2,
-        ease: "power2.out",
-        clearProps: "backgroundColor,color,borderColor",
-      });
-    };
-
-    const onDown = () => {
-      gsap.to(el, { scale: 0.97, duration: 0.1, ease: "power2.in" });
-    };
-
-    const onUp = () => {
-      gsap.to(el, { scale: 1.03, duration: 0.1, ease: "power2.out" });
-    };
-
-    el.addEventListener("mouseenter", onEnter);
-    el.addEventListener("mouseleave", onLeave);
-    el.addEventListener("mousedown", onDown);
-    el.addEventListener("mouseup", onUp);
-
-    return () => {
-      el.removeEventListener("mouseenter", onEnter);
-      el.removeEventListener("mouseleave", onLeave);
-      el.removeEventListener("mousedown", onDown);
-      el.removeEventListener("mouseup", onUp);
-    };
-  }, [variant, isDisabled]);
 
   return (
     <button
-      ref={btnRef}
       disabled={isDisabled}
       className={[
-        "font-display inline-flex items-center justify-center gap-2 tracking-tight",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-        "disabled:opacity-40 disabled:cursor-not-allowed",
+        'font-display inline-flex items-center justify-center gap-2 tracking-tight cursor-pointer',
+        'transition-all duration-200 ease-out',
+        'hover:scale-[1.03]',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
+        'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100',
         variants[variant],
         sizes[size],
-        fullWidth ? "w-full" : "",
+        fullWidth ? 'w-full' : '',
         className,
       ]
         .filter(Boolean)
-        .join(" ")}
+        .join(' ')}
       {...props}
     >
       {loading ? (

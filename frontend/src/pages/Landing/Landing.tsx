@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import './Landing.css';
 import Button from '@/components/ui/Button';
+import MobileMenu from '@/components/MobileMenu';
 
 const Landing: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -47,26 +48,6 @@ const Landing: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-
-      const menuElement = document.querySelector('.mobile-menu');
-      if (menuElement) {
-        gsap.fromTo(
-          menuElement,
-          { x: 400, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' },
-        );
-      }
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [mobileMenuOpen]);
-
   return (
     <div className="min-h-screen bg-bg flex flex-col gap-8 px-4 md:px-6 lg:px-12 pt-4 md:pt-8 lg:pt-12">
       <nav className="flex bg-transparent justify-between items-center">
@@ -98,36 +79,11 @@ const Landing: React.FC = () => {
         </button>
       </nav>
 
-      {mobileMenuOpen && (
-        <div className="mobile-menu md:hidden fixed inset-0 top-16 bg-bg/95 backdrop-blur z-40">
-          <div className="flex flex-col gap-6 p-6">
-            <NavLink
-              to=""
-              className={navLinkStyles}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Features
-            </NavLink>
-            <NavLink
-              to=""
-              className={navLinkStyles}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Analytics
-            </NavLink>
-            <NavLink
-              to=""
-              className={navLinkStyles}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Docs
-            </NavLink>
-            <Button variant="primary" className="w-full">
-              Get Started <ArrowRight size={14} />
-            </Button>
-          </div>
-        </div>
-      )}
+      <MobileMenu
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+      />
+
       <section className="flex flex-col mt-4 md:mt-8 justify-center items-center gap-4">
         <p className="text-accent font-mono text-xs md:text-sm mb-2 md:mb-4">
           // URL SHORTENER + ANALYTICS
@@ -150,6 +106,7 @@ const Landing: React.FC = () => {
           <Button variant="ghost">View the docs</Button>
         </div>
       </section>
+
       <section className="scroll-reveal mt-20 md:mt-36 flex flex-col justify-center items-center gap-4 px-2 md:px-0">
         <p className="text-accent font-mono text-xs md:text-sm mb-2 md:mb-4">
           // HOW IT WORKS
@@ -307,8 +264,7 @@ const Landing: React.FC = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-4">
               <Button variant="primary">
-                Explore Dashboard
-                <ArrowRight size={14} />
+                Explore Dashboard <ArrowRight size={14} />
               </Button>
               <Button variant="ghost">Learn more</Button>
             </div>
@@ -404,9 +360,7 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA SECTION */}
       <section className="scroll-reveal mt-20 md:mt-36 flex flex-col items-center justify-center gap-6 md:gap-8 px-4 md:px-12 py-16 md:py-24 lg:py-36 relative overflow-hidden">
-        {/* BG GLOW */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -414,8 +368,6 @@ const Landing: React.FC = () => {
               'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(232,255,71,0.05) 0%, transparent 70%)',
           }}
         />
-
-        {/* GHOST TEXT */}
         <span
           className="absolute font-extrabold pointer-events-none select-none text-center"
           style={{
