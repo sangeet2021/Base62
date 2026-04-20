@@ -8,7 +8,8 @@ interface MobileMenuProps {
   onClose: () => void;
 }
 
-const navLinkStyles = 'text-muted transition-colors hover:text-white font-mono text-sm';
+const navLinkStyles =
+  'text-muted transition-colors hover:text-white font-mono text-sm';
 
 export default function MobileMenu({ open, onClose }: MobileMenuProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -16,7 +17,9 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : 'unset';
-    return () => { document.body.style.overflow = 'unset'; };
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [open]);
 
   return (
@@ -26,7 +29,9 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
       className={[
         'md:hidden fixed inset-0 top-0 z-75 bg-black/60 backdrop-blur-sm ',
         'transition-opacity duration-300',
-        open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+        open
+          ? 'opacity-100 pointer-events-auto'
+          : 'opacity-0 pointer-events-none',
       ].join(' ')}
     >
       <div
@@ -39,12 +44,20 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
           open ? 'translate-x-0' : 'translate-x-full',
         ].join(' ')}
       >
-        <NavLink to="" className={navLinkStyles} onClick={onClose}>Features</NavLink>
-        <NavLink to="" className={navLinkStyles} onClick={onClose}>Analytics</NavLink>
-        <NavLink to="" className={navLinkStyles} onClick={onClose}>Docs</NavLink>
-        <Button variant="primary" onClick={onClose}>
-          Get Started <ArrowRight size={14} />
-        </Button>
+        <NavLink to="" className={navLinkStyles} onClick={onClose}>
+          Features
+        </NavLink>
+        <NavLink to="" className={navLinkStyles} onClick={onClose}>
+          Analytics
+        </NavLink>
+        <NavLink to="" className={navLinkStyles} onClick={onClose}>
+          Docs
+        </NavLink>
+        <NavLink to="/login">
+          <Button variant="primary" onClick={onClose}>
+            Get Started <ArrowRight size={14} />
+          </Button>
+        </NavLink>
       </div>
     </div>
   );
