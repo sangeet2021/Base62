@@ -14,9 +14,10 @@ type RequestBody struct {
 }
 
 type RegisterBody struct {
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Email           string `json:"email"`
+	Username        string `json:"username"`
+	Password        string `json:"password"`
+	ConfirmPassword string `json:"confirmPassword"`
 }
 
 func LoginHandler(c *gin.Context) {
@@ -50,6 +51,11 @@ func LoginHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login Succesful",
 		"token":   token,
+		"user": gin.H{
+			"id":       user.ID,
+			"username": user.Username,
+			"email":    user.Email,
+		},
 	})
 }
 
@@ -57,6 +63,11 @@ func RegisterHandler(c *gin.Context) {
 	var req RegisterBody
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Inavlid request format"})
+		return
+	}
+
+	if req.Password != req.ConfirmPassword {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Passwords do not match"})
 		return
 	}
 
