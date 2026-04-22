@@ -2,7 +2,7 @@
 go = true
 
 [build]
-cmd = "go build -o /app/server ./cmd/main.go"
+cmd = "go build -o /app/server ./main.go"
 
 [deploy]
 cmd = "/app/server"
