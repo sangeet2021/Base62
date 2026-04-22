@@ -24,7 +24,7 @@ func registerRoutes(r *gin.Engine){
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal(".env file not found!")
+		log.Println("No .env file found, using environment variables from the system")
 	}
 
 	db.Connect()
