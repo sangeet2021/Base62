@@ -1,0 +1,9 @@
+[providers]
+go = true
+
+[build]
+context = "backend"
+cmd = "go build -o /app/server ./cmd/main.go"
+
+[deploy]
+cmd = "/app/server"
