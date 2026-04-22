@@ -1,0 +1,8 @@
+[providers]
+go = true
+
+[build]
+cmd = "go build -o /app/server ./cmd/main.go"
+
+[deploy]
+cmd = "/app/server"
