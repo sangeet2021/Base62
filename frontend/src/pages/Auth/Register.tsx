@@ -2,8 +2,10 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@/components/ui/Button';
+import { authService } from '@/services/auth';
+import toast from 'react-hot-toast';
 
 const registerSchema = z
   .object({
@@ -26,6 +28,7 @@ const registerSchema = z
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 const Register: React.FC = () => {
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -36,10 +39,13 @@ const Register: React.FC = () => {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      console.log('Register attempt:', data);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (err) {
-      console.error('Registration failed:', err);
+      console.log(data)
+      await authService.register(data)
+      toast.success("User registration successful")
+      navigate('/login')
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.error || "Registration failed. Please try again.";
+      toast.error(errorMessage)
     }
   };
 

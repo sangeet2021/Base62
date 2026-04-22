@@ -1,12 +1,16 @@
 import './App.css';
-import {createBrowserRouter, RouterProvider} from "react-router-dom"
+import { Toaster } from 'react-hot-toast';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './Router';
 
-const router = createBrowserRouter(routes)
+const router = createBrowserRouter(routes);
 
 function App() {
   return (
-    <RouterProvider router={router}/>
+    <>
+      <Toaster position="top-right" reverseOrder={false} />
+      <RouterProvider router={router} />
+    </>
   );
 }
 

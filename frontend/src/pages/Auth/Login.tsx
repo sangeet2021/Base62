@@ -2,8 +2,11 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '@/services/auth';
+import { useAuthStore } from '@/store/AuthStore';
 import Button from '@/components/ui/Button';
+import toast from 'react-hot-toast';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
@@ -13,6 +16,8 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.login);
   const {
     register,
     handleSubmit,
@@ -23,10 +28,15 @@ const Login: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log('Login attempt:', data);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (err) {
-      console.error('Login failed:', err);
+      console.log(data)
+      const response = await authService.login(data);
+      setAuth(response.token, response.user);
+      navigate('/home');
+      toast.success('Login Success');
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.error || 'Login failed. Please try again.';
+      toast.error(errorMessage);
     }
   };
 
