@@ -32,7 +32,7 @@ const Login: React.FC = () => {
       const response = await authService.login(data);
       setAuth(response.token, response.user);
       toast.success('Login Success');
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: any) {
       const errorMessage =
         err.response?.data?.error || 'Login failed. Please try again.';

@@ -9,7 +9,7 @@ import Analytics from './pages/Analytics/Analytics';
 import Settings from './pages/Settings/Settings';
 
 export const routes: RouteObject[] = [
-  { path: '/landing', element: <Landing /> },
+  { path: '/', element: <Landing /> },
   {
     path: '/login',
     element: <Login />,
@@ -19,7 +19,7 @@ export const routes: RouteObject[] = [
     element: <Register />,
   },
   {
-    path: '/',
+    path: '/dashboard',
     element: <MainLayout />,
     children: [
       { index: true, element: <Dashboard /> },
