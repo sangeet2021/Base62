@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 import { useShallow } from 'zustand/react/shallow';
 
 const menuItems = [
-  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/links', label: 'My Links', icon: LinkIcon },
   { path: '/analytics', label: 'Analytics', icon: ChartNoAxesColumn },
   { path: '/settings', label: 'Settings', icon: Settings },
