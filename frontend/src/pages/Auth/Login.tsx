@@ -28,11 +28,11 @@ const Login: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log(data)
+      console.log(data);
       const response = await authService.login(data);
       setAuth(response.token, response.user);
-      navigate('/home');
       toast.success('Login Success');
+      navigate('/');
     } catch (err: any) {
       const errorMessage =
         err.response?.data?.error || 'Login failed. Please try again.';
