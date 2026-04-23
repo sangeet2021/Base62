@@ -13,9 +13,9 @@ import { useShallow } from 'zustand/react/shallow';
 
 const menuItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/links', label: 'My Links', icon: LinkIcon },
-  { path: '/analytics', label: 'Analytics', icon: ChartNoAxesColumn },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: '/dashboard/links', label: 'My Links', icon: LinkIcon },
+  { path: '/dashboard/analytics', label: 'Analytics', icon: ChartNoAxesColumn },
+  { path: '/dashboard/settings', label: 'Settings', icon: Settings },
 ];
 
 const Sidebar: React.FC = () => {
@@ -43,7 +43,7 @@ const Sidebar: React.FC = () => {
             <NavLink 
               key={item.path} 
               to={item.path} 
-              end={item.path === '/'}
+              end={item.path === '/dashboard'}
             >
               {({ isActive }) => (
                 <Button
