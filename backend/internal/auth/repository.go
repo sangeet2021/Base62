@@ -10,11 +10,11 @@ import (
 )
 
 type User struct {
-	ID        int
-	Username  string
-	Email     string
-	Password  string
-	CreatedAt time.Time
+    ID        int       `db:"id" json:"id"`
+    Username  string    `db:"username" json:"username"`
+    Email     string    `db:"email" json:"email"`
+    Password  string    `db:"password" json:"-"` 
+    CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
 func createUser(email string, username string, password string) error {
