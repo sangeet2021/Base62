@@ -5,31 +5,41 @@ import (
 	"log"
 	"time"
 
-	"github.com/sangeet/base62/internal/db"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type User struct {
-    ID        int       `db:"id" json:"id"`
-    Username  string    `db:"username" json:"username"`
-    Email     string    `db:"email" json:"email"`
-    Password  string    `db:"password" json:"-"` 
-    CreatedAt time.Time `db:"created_at" json:"created_at"`
+type UserRepository struct {
+	db *pgxpool.Pool
 }
 
-func createUser(email string, username string, password string) error {
+type User struct {
+	ID        int       `db:"id" json:"id"`
+	Username  string    `db:"username" json:"username"`
+	Email     string    `db:"email" json:"email"`
+	Password  string    `db:"password" json:"-"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+}
+
+func NewUserRepository(db *pgxpool.Pool) *UserRepository {
+	return &UserRepository{
+		db: db,
+	}
+}
+
+func (r *UserRepository) createUser(ctx context.Context, email string, username string, password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
 	query := `INSERT INTO users (email, password, username) VALUES ($1, $2, $3)`
-	_, err = db.Pool.Exec(context.Background(), query, email, string(hashedPassword), username)
+	_, err = r.db.Exec(ctx, query, email, string(hashedPassword), username)
 	return err
 }
 
-func getUserByEmail(email string) (*User, error) {
+func (r *UserRepository) getUserByEmail(ctx context.Context, email string) (*User, error) {
 	query := `SELECT id, username, email, password, created_at FROM users WHERE email = $1`
-	row := db.Pool.QueryRow(context.Background(), query, email)
+	row := r.db.QueryRow(ctx, query, email)
 
 	var user User
 	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt)
@@ -41,9 +51,9 @@ func getUserByEmail(email string) (*User, error) {
 	return &user, nil
 }
 
-func getUserByUsername(username string) (*User, error) {
+func (r *UserRepository) getUserByUsername(ctx context.Context, username string) (*User, error) {
 	query := `SELECT id, username, email, password, created_at FROM users WHERE username = $1`
-	row := db.Pool.QueryRow(context.Background(), query, username)
+	row := r.db.QueryRow(ctx, query, username)
 
 	var user User
 	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt)
@@ -54,9 +64,9 @@ func getUserByUsername(username string) (*User, error) {
 	return &user, nil
 }
 
-func getUserById(userID int) (*User, error) {
+func (r *UserRepository) getUserById(ctx context.Context, userID int) (*User, error) {
 	query := `SELECT id, username, email, password, created_at FROM users WHERE id = $1`
-	row := db.Pool.QueryRow(context.Background(), query, userID)
+	row := r.db.QueryRow(ctx, query, userID)
 
 	var user User
 	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt)

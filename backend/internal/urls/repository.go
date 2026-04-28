@@ -20,8 +20,14 @@ type Link struct {
 	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
+func NewLinkRepository(db *pgxpool.Pool) *LinkRepository {
+	return &LinkRepository{
+		db: db,
+	}
+}
+
 func (r *LinkRepository) CreateShortLink(ctx context.Context, link *Link) error {
-	query := `INSERT INTO links(long_url, short_id, clicks) VALUES ($1, $2, $3, $4)`
+	query := `INSERT INTO links(user_id, long_url, short_id, clicks) VALUES ($1, $2, $3, $4)`
 	_, err := r.db.Exec(ctx, query, link.UserID, link.LongURL, link.ShortID, link.Clicks)
 
 	return err
