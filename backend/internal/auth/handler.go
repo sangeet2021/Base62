@@ -8,6 +8,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type AuthHandler struct {
+	repo *UserRepository
+}
+
 type RequestBody struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -20,7 +24,13 @@ type RegisterBody struct {
 	ConfirmPassword string `json:"confirmPassword"`
 }
 
-func LoginHandler(c *gin.Context) {
+func NewAuthHandler(repo *UserRepository) *AuthHandler {
+	return &AuthHandler{
+		repo: repo,
+	}
+}
+
+func (h *AuthHandler) LoginHandler(c *gin.Context) {
 	var req RequestBody
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
@@ -29,7 +39,7 @@ func LoginHandler(c *gin.Context) {
 
 	log.Printf("DEBUG: Looking up email: '%s'", req.Email)
 
-	user, err := getUserByEmail(req.Email)
+	user, err := h.repo.getUserByEmail(c.Request.Context(), req.Email)
 	if err != nil {
 		log.Printf("DEBUG: Database error: %v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
@@ -59,7 +69,7 @@ func LoginHandler(c *gin.Context) {
 	})
 }
 
-func RegisterHandler(c *gin.Context) {
+func (h *AuthHandler) RegisterHandler(c *gin.Context) {
 	var req RegisterBody
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Inavlid request format"})
@@ -71,19 +81,19 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	_, err := getUserByEmail(req.Email)
+	_, err := h.repo.getUserByEmail(c.Request.Context(), req.Email)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
 		return
 	}
 
-	_, err = getUserByUsername(req.Username)
+	_, err = h.repo.getUserByUsername(c.Request.Context(), req.Username)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Username already exists"})
 		return
 	}
 
-	err = createUser(req.Email, req.Username, req.Password)
+	err = h.repo.createUser(c.Request.Context(), req.Email, req.Username, req.Password)
 	if err != nil {
 		log.Printf("ERROR: Database registration failed: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register user"})
@@ -93,14 +103,14 @@ func RegisterHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "User registerd succesfully"})
 }
 
-func GetProfileHandler(c *gin.Context) {
+func (h *AuthHandler) GetProfileHandler(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID not found"})
 		return
 	}
 
-	user, err := getUserById(userID.(int))
+	user, err := h.repo.getUserById(c.Request.Context(), userID.(int))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch the user"})
 		return
