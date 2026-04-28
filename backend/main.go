@@ -27,9 +27,12 @@ func main() {
 		log.Println("No .env file found, using environment variables from the system")
 	}
 
-	db.Connect()
+	pool, err := db.Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	userRepo := auth.NewUserRepository(db.Pool)
+	userRepo := auth.NewUserRepository(pool)
 
 	authHandler := auth.NewAuthHandler(userRepo)
 

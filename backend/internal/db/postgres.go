@@ -2,29 +2,26 @@ package db
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var Pool *pgxpool.Pool
-
-func Connect() {
+func Connect() (*pgxpool.Pool, error) {
 	connStr := os.Getenv("DATABASE_URL")
 	if connStr == "" {
-		log.Fatal("Database key is not set in dotenv")
+		return nil, fmt.Errorf("DATABASE URL is not set")
 	}
 
-	var err error
-	Pool, err = pgxpool.New(context.Background(), connStr)
+	pool, err := pgxpool.New(context.Background(), connStr)
 	if err != nil {
-		log.Fatal("Failed to connect to the database", err)
+		return nil, err
 	}
 
-	if err := Pool.Ping(context.Background()); err != nil {
-		log.Fatal("Database is unreachable")
+	if err := pool.Ping(context.Background()); err != nil {
+		return nil, err
 	}
 
-	log.Println("connected to the database")
+	return pool, nil
 }
