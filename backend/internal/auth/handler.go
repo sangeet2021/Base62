@@ -42,7 +42,7 @@ func (h *AuthHandler) LoginHandler(c *gin.Context) {
 	user, err := h.repo.getUserByEmail(c.Request.Context(), req.Email)
 	if err != nil {
 		log.Printf("DEBUG: Database error: %v", err)
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Credentials"})
 		return
 	}
 
@@ -93,7 +93,12 @@ func (h *AuthHandler) RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	err = h.repo.createUser(c.Request.Context(), req.Email, req.Username, req.Password)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+    c.JSON(http.StatusInternalServerError, gin.H{"error": "Something went wrong"})
+    return
+}
+	err = h.repo.createUser(c.Request.Context(), req.Email, req.Username, string(hashedPassword))
 	if err != nil {
 		log.Printf("ERROR: Database registration failed: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register user"})

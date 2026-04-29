@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository struct {
@@ -27,13 +26,9 @@ func NewUserRepository(db *pgxpool.Pool) *UserRepository {
 	}
 }
 
-func (r *UserRepository) createUser(ctx context.Context, email string, username string, password string) error {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
+func (r *UserRepository) createUser(ctx context.Context, email, username, hashedPassword string) error {
 	query := `INSERT INTO users (email, password, username) VALUES ($1, $2, $3)`
-	_, err = r.db.Exec(ctx, query, email, string(hashedPassword), username)
+	_, err := r.db.Exec(ctx, query, email, hashedPassword, username)
 	return err
 }
 
