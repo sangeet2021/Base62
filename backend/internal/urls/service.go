@@ -1,2 +1,45 @@
 package urls
 
+import (
+	"context"
+	"crypto/rand"
+	"math/big"
+)
+
+type LinkService struct {
+	repo *LinkRepository
+}
+
+func NewLinkService(repo *LinkRepository) *LinkService {
+	return &LinkService{
+		repo: repo,
+	}
+}
+
+func (s *LinkService) CreateShortLink(ctx context.Context, userID int, longURL string) (*Link, error) {
+	shortID := generateBase62ID(6)
+
+	newLink := &Link{
+		UserID:  userID,
+		LongURL: longURL,
+		ShortID: shortID,
+		Clicks:  0,
+	}
+
+	err := s.repo.CreateShortLink(ctx, newLink)
+	if err != nil {
+		return nil, err
+	}
+
+	return newLink, err
+}
+
+func generateBase62ID(lenght int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	result := make([]byte, lenght)
+	for i := range result {
+		num, _ := rand.Int(rand.Reader, big.NewInt(int64(len(charset))))
+		result[i] = charset[num.Int64()]
+	}
+	return string(result)
+}
