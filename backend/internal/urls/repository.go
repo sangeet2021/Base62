@@ -32,3 +32,10 @@ func (r *LinkRepository) CreateShortLink(ctx context.Context, link *Link) error 
 
 	return err
 }
+
+func (r *LinkRepository) GetByShortID(ctx context.Context, shortID string) (*Link, error) {
+	var link Link
+	query := `SELECT id, long_url, short_id, clicks FROM links WHERE short_id = $1`
+	err := r.db.QueryRow(ctx, query, shortID).Scan(&link.ID, &link.LongURL, &link.ShortID, &link.Clicks)
+	return &link, err
+}

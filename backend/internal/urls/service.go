@@ -43,3 +43,7 @@ func generateBase62ID(lenght int) string {
 	}
 	return string(result)
 }
+
+func (s *LinkService) GetLongURL(ctx context.Context, shortID string) (*Link, error) {
+	return s.repo.GetByShortID(ctx, shortID)
+}
