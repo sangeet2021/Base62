@@ -20,6 +20,7 @@ func NewLinkHandler(service *LinkService) *LinkHandler {
 	}
 }
 
+// Short link handler
 func (h *LinkHandler) ShortenHandler(c *gin.Context) {
 	var req ShortenRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
