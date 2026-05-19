@@ -7,7 +7,7 @@ import (
 )
 
 type ShortenRequest struct {
-	LongURL string `json: "long_url" binding: "required,url"`
+	LongURL string `json:"long_url" binding:"required,url"`
 }
 
 type LinkHandler struct {
@@ -35,19 +35,19 @@ func (h *LinkHandler) ShortenHandler(c *gin.Context) {
 	}
 
 	link, err := h.service.CreateShortLink(c.Request.Context(), userID.(int), req.LongURL)
-	if err!=nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error" : "Could not shorten URL"})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not shorten URL"})
 		return
 	}
 	c.JSON(http.StatusCreated, link)
 }
 
-func (h *LinkHandler) RedirectHandler (c *gin.Context){
+func (h *LinkHandler) RedirectHandler(c *gin.Context) {
 	shortID := c.Param("short_id")
 
 	link, err := h.service.GetLongURL(c.Request.Context(), shortID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error" : "Link not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Link not found"})
 		return
 	}
 

@@ -45,5 +45,12 @@ func generateBase62ID(lenght int) string {
 }
 
 func (s *LinkService) GetLongURL(ctx context.Context, shortID string) (*Link, error) {
-	return s.repo.GetByShortID(ctx, shortID)
+	link, err := s.repo.GetByShortID(ctx, shortID)
+	if err != nil {
+		return nil, err
+	}
+
+	_ = s.repo.IncrementClickCount(ctx, shortID)
+
+	return link, nil
 }

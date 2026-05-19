@@ -4,11 +4,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/sangeet/base62/internal/auth"
 	"github.com/sangeet/base62/internal/db"
+	"github.com/sangeet/base62/internal/router"
+	"github.com/sangeet/base62/internal/urls"
 )
 
 func registerRoutes(r *gin.Engine, authHandler *auth.AuthHandler) {
@@ -33,20 +34,13 @@ func main() {
 	}
 
 	userRepo := auth.NewUserRepository(pool)
-
 	authHandler := auth.NewAuthHandler(userRepo)
 
-	r := gin.Default()
+	linkRepo := urls.NewLinkRepository(pool)
+	linkService := urls.NewLinkService(linkRepo)
+	linkHandler := urls.NewLinkHandler(linkService)
 
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "https://base62-seven.vercel.app"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))
-
-	registerRoutes(r, authHandler)
+	r := router.SetupRouter(authHandler, linkHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {

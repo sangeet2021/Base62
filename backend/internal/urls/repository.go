@@ -39,3 +39,9 @@ func (r *LinkRepository) GetByShortID(ctx context.Context, shortID string) (*Lin
 	err := r.db.QueryRow(ctx, query, shortID).Scan(&link.ID, &link.LongURL, &link.ShortID, &link.Clicks)
 	return &link, err
 }
+
+func (r *LinkRepository) IncrementClickCount(ctx context.Context, shortID string) error {
+	query := `UPDATE links SET clicks = clicks + 1 WHERE short_id = $1`
+	_, err := r.db.Exec(ctx, query, shortID)
+	return err
+}
