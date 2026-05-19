@@ -34,9 +34,9 @@ func (s *LinkService) CreateShortLink(ctx context.Context, userID int, longURL s
 	return newLink, err
 }
 
-func generateBase62ID(lenght int) string {
+func generateBase62ID(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	result := make([]byte, lenght)
+	result := make([]byte, length)
 	for i := range result {
 		num, _ := rand.Int(rand.Reader, big.NewInt(int64(len(charset))))
 		result[i] = charset[num.Int64()]
