@@ -46,6 +46,33 @@ func (r *LinkRepository) IncrementClickCount(ctx context.Context, shortID string
 	return err
 }
 
+func (r *LinkRepository) GetAllLinks(ctx context.Context, userID int) ([]Link, error) {
+
+	query := `SELECT id, user_id, long_url, short_id, clicks, created_at FROM links WHERE user_id = $1 ORDER BY created_at DESC`
+	rows, err := r.db.Query(ctx, query, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var links []Link
+
+	for rows.Next() {
+		var link Link
+		err := rows.Scan(&link.ID, &link.UserID, &link.LongURL, &link.ShortID, &link.Clicks, &link.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		links = append(links, link)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return links, nil
+}
+
 func (r *LinkRepository) GetLinkByID(ctx context.Context, linkID int, userID int) (*Link, error) {
 	var link Link
 	query := `SELECT id, user_id, long_url, short_id, clicks, created_at FROM links WHERE id = $1 and user_id = $2`

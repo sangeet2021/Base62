@@ -56,6 +56,22 @@ func (h *LinkHandler) RedirectHandler(c *gin.Context) {
 	c.Redirect(http.StatusFound, link.LongURL)
 }
 
+func (h *LinkHandler) GetAllLinksHandler (c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error" : "User not identified"})
+		return
+	}
+
+	links, err := h.service.GetAllUserLinks(c.Request.Context(), userID.(int))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error" : "Links not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, links)
+}
+
 func (h *LinkHandler) GetLinkDetailsHandler(c *gin.Context) {
 	idParam := c.Param("id")
 	linkID, err := strconv.Atoi(idParam)

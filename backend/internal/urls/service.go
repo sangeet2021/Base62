@@ -55,6 +55,14 @@ func (s *LinkService) GetLongURL(ctx context.Context, shortID string) (*Link, er
 	return link, nil
 }
 
+func (s *LinkService) GetAllUserLinks(ctx context.Context, userID int) ([]Link, error) {
+	links, err := s.repo.GetAllLinks(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return links, nil
+}
+
 func (s *LinkService) GetLinkDetails(ctx context.Context, linkID int, userID int) (*Link, error) {
 	return s.repo.GetLinkByID(ctx, linkID, userID)
 }
