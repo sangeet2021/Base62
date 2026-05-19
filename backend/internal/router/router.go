@@ -28,6 +28,7 @@ func SetupRouter(authHandler *auth.AuthHandler, linkHandler *urls.LinkHandler) *
 	{
 		api.GET("/me", authHandler.GetProfileHandler)
 		api.POST("/shorten", linkHandler.ShortenHandler)
+		api.GET("/links/:id", linkHandler.GetLinkDetailsHandler)
 	}
 	return r
 }

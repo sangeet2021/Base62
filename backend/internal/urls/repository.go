@@ -27,8 +27,8 @@ func NewLinkRepository(db *pgxpool.Pool) *LinkRepository {
 }
 
 func (r *LinkRepository) CreateShortLink(ctx context.Context, link *Link) error {
-	query := `INSERT INTO links(user_id, long_url, short_id, clicks) VALUES ($1, $2, $3, $4)`
-	_, err := r.db.Exec(ctx, query, link.UserID, link.LongURL, link.ShortID, link.Clicks)
+	query := `INSERT INTO links(user_id, long_url, short_id, clicks) VALUES ($1, $2, $3, $4) RETURNING id`
+	err := r.db.QueryRow(ctx, query, link.UserID, link.LongURL, link.ShortID, link.Clicks).Scan(&link.ID)
 
 	return err
 }
@@ -44,4 +44,12 @@ func (r *LinkRepository) IncrementClickCount(ctx context.Context, shortID string
 	query := `UPDATE links SET clicks = clicks + 1 WHERE short_id = $1`
 	_, err := r.db.Exec(ctx, query, shortID)
 	return err
+}
+
+func (r *LinkRepository) GetLinkByID(ctx context.Context, linkID int, userID int) (*Link, error) {
+	var link Link
+	query := `SELECT id, user_id, long_url, short_id, clicks, created_at FROM links WHERE id = $1 and user_id = $2`
+
+	err := r.db.QueryRow(ctx, query, linkID, userID).Scan(&link.ID, &link.UserID, &link.LongURL, &link.ShortID, &link.Clicks, &link.CreatedAt)
+	return &link, err
 }
