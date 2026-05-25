@@ -20,7 +20,7 @@ export const linkService = {
   },
 
   shortenUrl: async (data: ShortenRequest): Promise<Link> => {
-    const response = await api.post('/api/shortern', data);
+    const response = await api.post('/api/shorten', data);
     return response.data;
   },
 
