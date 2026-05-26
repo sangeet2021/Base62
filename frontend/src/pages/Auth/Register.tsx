@@ -28,7 +28,7 @@ const registerSchema = z
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 const Register: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -39,13 +39,13 @@ const Register: React.FC = () => {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      console.log(data)
-      await authService.register(data)
-      toast.success("User registration successful")
-      navigate('/login')
+      await authService.register(data);
+      toast.success('User registration successful');
+      navigate('/login');
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || "Registration failed. Please try again.";
-      toast.error(errorMessage)
+      const errorMessage =
+        err.response?.data?.error || 'Registration failed. Please try again.';
+      toast.error(errorMessage);
     }
   };
 
