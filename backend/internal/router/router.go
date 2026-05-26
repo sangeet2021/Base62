@@ -18,6 +18,10 @@ func SetupRouter(authHandler *auth.AuthHandler, linkHandler *urls.LinkHandler) *
 		AllowCredentials: true,
 	}))
 
+	r.OPTIONS("/*any", func(c *gin.Context) {
+    c.Status(204)
+})
+
 	r.POST("/login", authHandler.LoginHandler)
 	r.POST("/register", authHandler.RegisterHandler)
 
